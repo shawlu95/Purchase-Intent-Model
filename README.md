@@ -21,6 +21,7 @@ A predictive model for customer purchase behavior in e-commerce context.
 * GMV / quantity (gpq)
 * GMV / day = (GMV / order) / (day / order) (gpd)
 * GMV per day since most recent purchase in category (gsl)
+![Result](fig/feature_importance.png): 
 
 # Model
 - Multi-Layered Neural Net Binary Classifer
@@ -28,6 +29,7 @@ A predictive model for customer purchase behavior in e-commerce context.
 - Only 2 features are included: days per order (gpo), days since last order (dsl)
 
 # Performance
+![Result](fig/roc.png): 
 * baseline = 0.59217
 * True positive(tp) = 77
 * True negative(tn) = 213
@@ -38,3 +40,7 @@ A predictive model for customer purchase behavior in e-commerce context.
 * accuracy = 0.66820
 * True Positive Rate(TPR) = 0.43503
 * False Positive Rate(FPR) = 0.17121
+
+![Result](fig/learning_curve.png): 
+
+![Result](fig/validation_accuracy.png): 
