@@ -1,3 +1,8 @@
+# Shaw's addition
+log.txt
+sample_100_dataset_v2_d7.csv
+py/.DS_Store
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
