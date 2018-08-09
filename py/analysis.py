@@ -167,14 +167,15 @@ def evaluate_model(target, probas, verbose = False):
 
 def discretize(target_, probas_, verbose_ = False, n = 10):
     step = 1.0 / n
-    t = 0.1
+    t = step
     tprs = []
     fprs = []
     ts = []
-    while t < 0.9:
+    while t < 1:
         s = err_analyze(target_, probas_, t, False)
         tpr, fpr = s["tpr"], s["fpr"]
-        log("For t = %.2f, FPR = %.5f, TPR = %.5f"%(t, fpr, tpr))
+        if verbose_:
+            log("For t = %.2f, FPR = %.5f, TPR = %.5f"%(t, fpr, tpr))
         tprs.append(tpr)
         fprs.append(fpr)
         ts.append(t)
