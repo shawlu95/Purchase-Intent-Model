@@ -1,3 +1,5 @@
+# ------------------ INITIALIZE ---------------------
+
 import os, errno
 
 # clear rubbish
@@ -41,6 +43,8 @@ from sklearn.base import clone
 
 cwd = os.getcwd()
 ls = cwd.split("/")
+del ls[-1]
+cwd = "/".join(ls)
 del ls[-1]
 root = "/".join(ls)
 
@@ -190,3 +194,105 @@ class_map = {
     class_labls[17] : "Personal Apperance",
     class_labls[18] : "Toddler Mom"
 }
+
+# ------------------ CODE BEGINS ---------------------
+
+file_prefix = "sample_100_dataset_v2_d7"
+sub_dir = "data"
+
+path = os.path.join(cwd, sub_dir, file_prefix + ".csv")
+df = pd.read_csv(path, sep = ",")
+
+nans = lambda df: df[df.isnull().any(axis=1)]
+
+# drop bad features here
+df = df.drop(["gpd"], axis = 1)
+
+df = df.dropna()
+
+# separate label into another dataframe
+df_labl = df[[key_label]]
+df_labl.head()
+
+# extract input features
+df_data = df.drop([key_dt, key_label], axis = 1)
+df_data.head()
+
+# choose subset of features to use
+features = ["dpq", "dsl"]
+
+# choose train-test split ratio
+ratio = 0.9
+
+# normalize
+df_data = (df_data - np.mean(df_data)) / np.std(df_data)
+
+df_data = df[features]
+
+rows = len(df_data)
+split = int(rows * ratio)
+trn_data = df_data[:split]
+trn_labl = df_labl[:split].astype(int)
+
+tst_data = df_data[split:]
+tst_labl = df_labl[split:].astype(int)
+
+print("Dataset baseline: %.5f%%"%(analysis.Baseline(df_labl)))
+print("Train baseline: %.5f%%"%(analysis.Baseline(trn_labl)))
+print("Test baseline: %.5f%%"%(analysis.Baseline(tst_labl)))
+
+# NEURAL NET
+from keras.models import Sequential 
+from keras.layers import Dense, Activation 
+from keras.utils import np_utils
+
+def Build_Model():
+    nn = Sequential()
+    nn.add(Dense(32, activation="relu", input_shape=(len(features),)))
+    nn.add(Dense(32, activation="relu"))
+    nn.add(Dense(1, activation="sigmoid"))
+    nn.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
+    return nn
+
+k = 4
+num_val_samples = len(trn_data) // k
+num_epochs = 80
+batch_size = 256
+all_scores = []
+all_val_loss_history = []
+all_val_acc_history = []
+
+for i in range(k):
+    print('processing fold %i'%(i + 1))
+    val_data = trn_data[i * num_val_samples : (i + 1) * num_val_samples]
+    val_labl = trn_labl[i * num_val_samples : (i + 1) * num_val_samples]
+    
+    prt_trn_data = np.concatenate([trn_data[:i * num_val_samples],
+                                  trn_data[(i + 1) * num_val_samples:]], axis = 0)
+    prt_trn_labl = np.concatenate([trn_labl[:i * num_val_samples],
+                                  trn_labl[(i + 1) * num_val_samples:]], axis = 0)
+    
+    model = Build_Model()
+    history = model.fit(prt_trn_data, prt_trn_labl, 
+                        validation_data = (val_data, val_labl),
+                        epochs = num_epochs, batch_size = batch_size, verbose = 0)
+    
+    all_val_loss_history.append(history.history['val_loss'])
+    all_val_acc_history.append(history.history['val_acc'])
+    
+    val_l, val_a = model.evaluate(val_data, val_labl, verbose = 0)
+    print("Fold %i val_loss %.5f, val_acc %.5f"%(i + 1, val_l, val_a))
+    all_scores.append(val_a)
+
+# FINAL MODEL
+num_epochs = 80
+batch_size = 256
+threshold = 0.45
+model = Build_Model()
+history = model.fit(trn_data, trn_labl,
+                    validation_data = (tst_data, tst_labl),
+                    epochs = num_epochs, batch_size = batch_size, verbose = 0)
+
+pred = model.predict(tst_data)
+analysis.err_analyze(tst_labl.values, pred, threshold, verbose = True)
+tprs, fprs, ts = analysis.discretize(tst_labl.values, pred, n = 100)

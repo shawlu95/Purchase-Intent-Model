@@ -3,8 +3,8 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 def Baseline(df_labl):
-    return 100* max((np.sum(df_labl.values) / len(df_labl)),
-                    (1 - (np.sum(df_labl.values) / len(df_labl))))
+    return 100* max(float((np.sum(df_labl.values)) / len(df_labl)),
+                    (1 - float((np.sum(df_labl.values)) / len(df_labl))))
 
 def log(s, filrname = "log", verbose = True):
     if verbose:
@@ -86,7 +86,7 @@ def err_analyze(target, probas, threshold, verbose = True):
     summary["acc"] = accuracy
 
     if verbose:
-        log("baseline = %.5f"%(baseline), verbose = verbose)
+        log("baseline = %.5f%%"%(100 * baseline), verbose = verbose)
         log("tp = %i"%(tp), verbose = verbose)
         log("tn = %i"%(tn), verbose = verbose)
         log("fp = %i"%(fp), verbose = verbose)
@@ -95,16 +95,16 @@ def err_analyze(target, probas, threshold, verbose = True):
         if tp + fp == 0:
             log("precision = nan", verbose = verbose)
         else:
-            log("precision = %.5f"%(precision), verbose = verbose)
+            log("precision = %.5f%%"%(100 * precision), verbose = verbose)
 
         if tp + fn == 0:
             log("recall = nan", verbose = verbose)
         else:
-            log("recall = %.5f"%(recall), verbose = verbose)
+            log("recall = %.5f%%"%(100 * recall), verbose = verbose)
 
-        log("accuracy = %.5f"%(accuracy), verbose = verbose)
-        log("TPR = %.5f"%(tpr), verbose = verbose)
-        log("FPR = %.5f"%(fpr), verbose = verbose)
+        log("accuracy = %.5f%%"%(100 * accuracy), verbose = verbose)
+        log("TPR = %.5f%%"%(100 * tpr), verbose = verbose)
+        log("FPR = %.5f%%"%(100 * fpr), verbose = verbose)
     return summary
 
 def find_tpr_for_fpr(target_, probas_, target_fpr, verbose_ = False):
@@ -165,7 +165,7 @@ def evaluate_model(target, probas, verbose = False):
     stat = [fprs, tprs, t]
     return score, stat
 
-def discretize(target_, probas_, verbose_ = False, n = 10):
+def discretize(target_, probas_, verbose_ = False, n = 100):
     step = 1.0 / n
     t = step
     tprs = []
