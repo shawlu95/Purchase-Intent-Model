@@ -23,12 +23,12 @@ A predictive model for customer purchase behavior in e-commerce context.
 * GMV per day since most recent purchase in category (gsl)
 ![Result](fig/feature_importance.png): 
 
-# Model
+## Model
 - Multi-Layered Neural Net Binary Classifer
 - See def Build_Model() for details
 - Only 2 features are included: days per order (gpo), days since last order (dsl)
 
-# Performance
+## Performance
 ![Result](fig/roc.png): 
 * baseline = 0.59217
 * True positive(tp) = 77
@@ -44,3 +44,10 @@ A predictive model for customer purchase behavior in e-commerce context.
 ![Result](fig/learning_curve.png): 
 
 ![Result](fig/validation_accuracy.png): 
+
+## Generalize
+Applying the purchase intent model to 45 categories, it is clear that the most predictive categories are baby categories (formula, diapers, etc.), pet categories (dog, cat, others), and food categories (meal essentials, healthy food, kitchen). This makes logical sense as baby, pet, and food are regularly recurring obligation that must be satisfied on predictable time intervals.
+
+Less predictable categories are sports shoes, health appliances, computers and cell phones. It stands to reason that orders from those categories stem from unpredictive motives.
+
+![Result](fig/all_categories.png)
