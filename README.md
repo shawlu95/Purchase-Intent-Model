@@ -1,4 +1,4 @@
-# Customer Intent Model
+# Purchase Intent Model
 A predictive model for customer purchase behavior in e-commerce context.
 
 ## Dataset
