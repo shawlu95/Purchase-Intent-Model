@@ -1,14 +1,14 @@
-# Purchase Intent Model
+## Purchase Intent Model
 A predictive model for customer purchase behavior in e-commerce context.
 
-## Dataset
+### Dataset
 * This dataset tries to capture customer purchase behavior in baby category.
 * This dataset includes 100 mother users from the mother cluster, resulting from K-means clustering based on purchase history.
 * The K-means clustering was performed on top 20% users of year 2017.
 * For each dataset, datapoint was sampled at uniform time interval (7 days).
 * For each sampled reference time, the sample is labelled 1 if user placed an order in baby category within 7 days. Otherwise it's labelled 0.
 
-## Features
+### Features
 * Exponential moving averages of aggregate spending (ema)
 * Average days between orders (dpo)
 * Average days per quantity purchased (dpq)
@@ -23,12 +23,13 @@ A predictive model for customer purchase behavior in e-commerce context.
 * GMV per day since most recent purchase in category (gsl)
 ![Result](fig/feature_importance.png): 
 
-## Model
+### Model
 - Multi-Layered Neural Net Binary Classifer
 - See def Build_Model() for details
 - Only 2 features are included: days per order (gpo), days since last order (dsl)
 
-## Performance
+___
+### Performance
 ![Result](fig/roc.png): 
 * baseline = 0.59217
 * True positive(tp) = 77
@@ -45,7 +46,7 @@ A predictive model for customer purchase behavior in e-commerce context.
 
 ![Result](fig/validation_accuracy.png): 
 
-## Generalize
+### Generalize
 Applying the purchase intent model to 45 categories, it is clear that the most predictive categories are baby categories (formula, diapers, etc.), pet categories (dog, cat, others), and food categories (meal essentials, healthy food, kitchen). This makes logical sense as baby, pet, and food are regularly recurring obligation that must be satisfied on predictable time intervals.
 
 Less predictable categories are sports shoes, health appliances, computers and cell phones. It stands to reason that orders from those categories stem from unpredictive motives.
